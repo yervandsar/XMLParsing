@@ -1,6 +1,6 @@
 //
 //  EncodingErrorExtension.swift
-//  XMLParsing
+//  XMLCoder
 //
 //  Created by Shawn Moore on 11/22/17.
 //  Copyright © 2017 Shawn Moore. All rights reserved.
@@ -8,17 +8,15 @@
 
 import Foundation
 
-//===----------------------------------------------------------------------===//
-// Error Utilities
-//===----------------------------------------------------------------------===//
-internal extension EncodingError {
+/// Error Utilities
+extension EncodingError {
     /// Returns a `.invalidValue` error describing the given invalid floating-point value.
     ///
     ///
     /// - parameter value: The value that was invalid to encode.
     /// - parameter path: The path of `CodingKey`s taken to encode this value.
     /// - returns: An `EncodingError` with the appropriate path and debug description.
-    static func _invalidFloatingPointValue<T : FloatingPoint>(_ value: T, at codingPath: [CodingKey]) -> EncodingError {
+    static func _invalidFloatingPointValue<T: FloatingPoint>(_ value: T, at codingPath: [CodingKey]) -> EncodingError {
         let valueDescription: String
         if value == T.infinity {
             valueDescription = "\(T.self).infinity"
@@ -27,8 +25,12 @@ internal extension EncodingError {
         } else {
             valueDescription = "\(T.self).nan"
         }
-        
-        let debugDescription = "Unable to encode \(valueDescription) directly in XML. Use XMLEncoder.NonConformingFloatEncodingStrategy.convertToString to specify how the value should be encoded."
+
+        let debugDescription = """
+            Unable to encode \(valueDescription) directly in XML. \
+            Use XMLEncoder.NonConformingFloatEncodingStrategy.convertToString \
+            to specify how the value should be encoded.
+        """
         return .invalidValue(value, EncodingError.Context(codingPath: codingPath, debugDescription: debugDescription))
     }
 }

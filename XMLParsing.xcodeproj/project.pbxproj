@@ -21,21 +21,48 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3E1EBDD722B294990033126A /* DynamicNodeEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDCA22B294730033126A /* DynamicNodeEncoding.swift */; };
+		3E1EBDD822B294990033126A /* EncodingErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDC622B294720033126A /* EncodingErrorExtension.swift */; };
+		3E1EBDD922B294990033126A /* SingleValueEncodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDC722B294720033126A /* SingleValueEncodingContainer.swift */; };
+		3E1EBDDA22B294990033126A /* XMLEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDC522B294720033126A /* XMLEncoder.swift */; };
+		3E1EBDDB22B294990033126A /* XMLEncoderImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDCD22B294730033126A /* XMLEncoderImplementation.swift */; };
+		3E1EBDDC22B294990033126A /* XMLEncodingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDCC22B294730033126A /* XMLEncodingStorage.swift */; };
+		3E1EBDDD22B294990033126A /* XMLKeyedEncodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDC922B294730033126A /* XMLKeyedEncodingContainer.swift */; };
+		3E1EBDDE22B294990033126A /* XMLReferencingEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDC822B294720033126A /* XMLReferencingEncoder.swift */; };
+		3E1EBDDF22B294990033126A /* XMLUnkeyedEncodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDCB22B294730033126A /* XMLUnkeyedEncodingContainer.swift */; };
+		3E1EBDE822B294C30033126A /* XMLDecodingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE022B294C20033126A /* XMLDecodingStorage.swift */; };
+		3E1EBDE922B294C30033126A /* XMLDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE122B294C20033126A /* XMLDecoder.swift */; };
+		3E1EBDEA22B294C30033126A /* SingleValueDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE222B294C20033126A /* SingleValueDecodingContainer.swift */; };
+		3E1EBDEB22B294C30033126A /* XMLDecoderImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE322B294C20033126A /* XMLDecoderImplementation.swift */; };
+		3E1EBDEC22B294C30033126A /* XMLUnkeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE422B294C20033126A /* XMLUnkeyedDecodingContainer.swift */; };
+		3E1EBDED22B294C30033126A /* DynamicNodeDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE522B294C30033126A /* DynamicNodeDecoding.swift */; };
+		3E1EBDEE22B294C30033126A /* DecodingErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE622B294C30033126A /* DecodingErrorExtension.swift */; };
+		3E1EBDEF22B294C30033126A /* XMLKeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDE722B294C30033126A /* XMLKeyedDecodingContainer.swift */; };
+		3E1EBE0822B294FE0033126A /* IntBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF222B294FD0033126A /* IntBox.swift */; };
+		3E1EBE0922B294FE0033126A /* UnkeyedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF322B294FD0033126A /* UnkeyedBox.swift */; };
+		3E1EBE0A22B294FE0033126A /* DateBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF422B294FD0033126A /* DateBox.swift */; };
+		3E1EBE0B22B294FE0033126A /* FloatBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF522B294FD0033126A /* FloatBox.swift */; };
+		3E1EBE0C22B294FE0033126A /* KeyedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF622B294FD0033126A /* KeyedBox.swift */; };
+		3E1EBE0D22B294FE0033126A /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF722B294FD0033126A /* Box.swift */; };
+		3E1EBE0E22B294FE0033126A /* NullBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF822B294FD0033126A /* NullBox.swift */; };
+		3E1EBE0F22B294FE0033126A /* UIntBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDF922B294FD0033126A /* UIntBox.swift */; };
+		3E1EBE1022B294FE0033126A /* URLBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDFA22B294FD0033126A /* URLBox.swift */; };
+		3E1EBE1122B294FE0033126A /* SharedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDFB22B294FD0033126A /* SharedBox.swift */; };
+		3E1EBE1222B294FE0033126A /* DecimalBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDFC22B294FD0033126A /* DecimalBox.swift */; };
+		3E1EBE1322B294FE0033126A /* DataBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDFD22B294FD0033126A /* DataBox.swift */; };
+		3E1EBE1422B294FE0033126A /* BoolBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDFE22B294FD0033126A /* BoolBox.swift */; };
+		3E1EBE1522B294FE0033126A /* StringBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBDFF22B294FD0033126A /* StringBox.swift */; };
+		3E1EBE1622B294FE0033126A /* XMLHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0022B294FD0033126A /* XMLHeader.swift */; };
+		3E1EBE1722B294FE0033126A /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0122B294FD0033126A /* String+Extensions.swift */; };
+		3E1EBE1822B294FE0033126A /* XMLStackParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0222B294FD0033126A /* XMLStackParser.swift */; };
+		3E1EBE1922B294FE0033126A /* Metatypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0322B294FD0033126A /* Metatypes.swift */; };
+		3E1EBE1A22B294FE0033126A /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0422B294FD0033126A /* ISO8601DateFormatter.swift */; };
+		3E1EBE1B22B294FE0033126A /* XMLKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0522B294FD0033126A /* XMLKey.swift */; };
+		3E1EBE1C22B294FE0033126A /* KeyedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0622B294FD0033126A /* KeyedStorage.swift */; };
+		3E1EBE1D22B294FE0033126A /* XMLCoderElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1EBE0722B294FD0033126A /* XMLCoderElement.swift */; };
 		OBJ_35 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_41 /* XMLParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* XMLParsingTests.swift */; };
 		OBJ_43 /* XMLParsing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "XMLParsing::XMLParsing::Product" /* XMLParsing.framework */; };
-		OBJ_50 /* DecodingErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* DecodingErrorExtension.swift */; };
-		OBJ_51 /* XMLDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* XMLDecoder.swift */; };
-		OBJ_52 /* XMLDecodingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* XMLDecodingStorage.swift */; };
-		OBJ_53 /* XMLKeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* XMLKeyedDecodingContainer.swift */; };
-		OBJ_54 /* XMLUnkeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* XMLUnkeyedDecodingContainer.swift */; };
-		OBJ_55 /* EncodingErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* EncodingErrorExtension.swift */; };
-		OBJ_56 /* XMLEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* XMLEncoder.swift */; };
-		OBJ_57 /* XMLEncodingStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* XMLEncodingStorage.swift */; };
-		OBJ_58 /* XMLReferencingEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* XMLReferencingEncoder.swift */; };
-		OBJ_59 /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* ISO8601DateFormatter.swift */; };
-		OBJ_60 /* XMLKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* XMLKey.swift */; };
-		OBJ_61 /* XMLStackParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* XMLStackParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,18 +83,45 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		OBJ_10 /* DecodingErrorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodingErrorExtension.swift; sourceTree = "<group>"; };
-		OBJ_11 /* XMLDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLDecoder.swift; sourceTree = "<group>"; };
-		OBJ_12 /* XMLDecodingStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLDecodingStorage.swift; sourceTree = "<group>"; };
-		OBJ_13 /* XMLKeyedDecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLKeyedDecodingContainer.swift; sourceTree = "<group>"; };
-		OBJ_14 /* XMLUnkeyedDecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLUnkeyedDecodingContainer.swift; sourceTree = "<group>"; };
-		OBJ_16 /* EncodingErrorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodingErrorExtension.swift; sourceTree = "<group>"; };
-		OBJ_17 /* XMLEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLEncoder.swift; sourceTree = "<group>"; };
-		OBJ_18 /* XMLEncodingStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLEncodingStorage.swift; sourceTree = "<group>"; };
-		OBJ_19 /* XMLReferencingEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLReferencingEncoder.swift; sourceTree = "<group>"; };
-		OBJ_20 /* ISO8601DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISO8601DateFormatter.swift; sourceTree = "<group>"; };
-		OBJ_21 /* XMLKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLKey.swift; sourceTree = "<group>"; };
-		OBJ_22 /* XMLStackParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLStackParser.swift; sourceTree = "<group>"; };
+		3E1EBDC522B294720033126A /* XMLEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLEncoder.swift; sourceTree = "<group>"; };
+		3E1EBDC622B294720033126A /* EncodingErrorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncodingErrorExtension.swift; sourceTree = "<group>"; };
+		3E1EBDC722B294720033126A /* SingleValueEncodingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleValueEncodingContainer.swift; sourceTree = "<group>"; };
+		3E1EBDC822B294720033126A /* XMLReferencingEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLReferencingEncoder.swift; sourceTree = "<group>"; };
+		3E1EBDC922B294730033126A /* XMLKeyedEncodingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLKeyedEncodingContainer.swift; sourceTree = "<group>"; };
+		3E1EBDCA22B294730033126A /* DynamicNodeEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicNodeEncoding.swift; sourceTree = "<group>"; };
+		3E1EBDCB22B294730033126A /* XMLUnkeyedEncodingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLUnkeyedEncodingContainer.swift; sourceTree = "<group>"; };
+		3E1EBDCC22B294730033126A /* XMLEncodingStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLEncodingStorage.swift; sourceTree = "<group>"; };
+		3E1EBDCD22B294730033126A /* XMLEncoderImplementation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLEncoderImplementation.swift; sourceTree = "<group>"; };
+		3E1EBDE022B294C20033126A /* XMLDecodingStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLDecodingStorage.swift; sourceTree = "<group>"; };
+		3E1EBDE122B294C20033126A /* XMLDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLDecoder.swift; sourceTree = "<group>"; };
+		3E1EBDE222B294C20033126A /* SingleValueDecodingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleValueDecodingContainer.swift; sourceTree = "<group>"; };
+		3E1EBDE322B294C20033126A /* XMLDecoderImplementation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLDecoderImplementation.swift; sourceTree = "<group>"; };
+		3E1EBDE422B294C20033126A /* XMLUnkeyedDecodingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLUnkeyedDecodingContainer.swift; sourceTree = "<group>"; };
+		3E1EBDE522B294C30033126A /* DynamicNodeDecoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicNodeDecoding.swift; sourceTree = "<group>"; };
+		3E1EBDE622B294C30033126A /* DecodingErrorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecodingErrorExtension.swift; sourceTree = "<group>"; };
+		3E1EBDE722B294C30033126A /* XMLKeyedDecodingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLKeyedDecodingContainer.swift; sourceTree = "<group>"; };
+		3E1EBDF222B294FD0033126A /* IntBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntBox.swift; sourceTree = "<group>"; };
+		3E1EBDF322B294FD0033126A /* UnkeyedBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnkeyedBox.swift; sourceTree = "<group>"; };
+		3E1EBDF422B294FD0033126A /* DateBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateBox.swift; sourceTree = "<group>"; };
+		3E1EBDF522B294FD0033126A /* FloatBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatBox.swift; sourceTree = "<group>"; };
+		3E1EBDF622B294FD0033126A /* KeyedBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedBox.swift; sourceTree = "<group>"; };
+		3E1EBDF722B294FD0033126A /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
+		3E1EBDF822B294FD0033126A /* NullBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullBox.swift; sourceTree = "<group>"; };
+		3E1EBDF922B294FD0033126A /* UIntBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIntBox.swift; sourceTree = "<group>"; };
+		3E1EBDFA22B294FD0033126A /* URLBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLBox.swift; sourceTree = "<group>"; };
+		3E1EBDFB22B294FD0033126A /* SharedBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedBox.swift; sourceTree = "<group>"; };
+		3E1EBDFC22B294FD0033126A /* DecimalBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalBox.swift; sourceTree = "<group>"; };
+		3E1EBDFD22B294FD0033126A /* DataBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBox.swift; sourceTree = "<group>"; };
+		3E1EBDFE22B294FD0033126A /* BoolBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoolBox.swift; sourceTree = "<group>"; };
+		3E1EBDFF22B294FD0033126A /* StringBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringBox.swift; sourceTree = "<group>"; };
+		3E1EBE0022B294FD0033126A /* XMLHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLHeader.swift; sourceTree = "<group>"; };
+		3E1EBE0122B294FD0033126A /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		3E1EBE0222B294FD0033126A /* XMLStackParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLStackParser.swift; sourceTree = "<group>"; };
+		3E1EBE0322B294FD0033126A /* Metatypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metatypes.swift; sourceTree = "<group>"; };
+		3E1EBE0422B294FD0033126A /* ISO8601DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ISO8601DateFormatter.swift; sourceTree = "<group>"; };
+		3E1EBE0522B294FD0033126A /* XMLKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLKey.swift; sourceTree = "<group>"; };
+		3E1EBE0622B294FD0033126A /* KeyedStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedStorage.swift; sourceTree = "<group>"; };
+		3E1EBE0722B294FD0033126A /* XMLCoderElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLCoderElement.swift; sourceTree = "<group>"; };
 		OBJ_25 /* XMLParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLParsingTests.swift; sourceTree = "<group>"; };
 		OBJ_26 /* Sample XML */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Sample XML"; sourceTree = SOURCE_ROOT; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -94,13 +148,55 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E1EBDF022B294FD0033126A /* Auxiliaries */ = {
+			isa = PBXGroup;
+			children = (
+				3E1EBDF122B294FD0033126A /* Box */,
+				3E1EBE0022B294FD0033126A /* XMLHeader.swift */,
+				3E1EBE0122B294FD0033126A /* String+Extensions.swift */,
+				3E1EBE0222B294FD0033126A /* XMLStackParser.swift */,
+				3E1EBE0322B294FD0033126A /* Metatypes.swift */,
+				3E1EBE0422B294FD0033126A /* ISO8601DateFormatter.swift */,
+				3E1EBE0522B294FD0033126A /* XMLKey.swift */,
+				3E1EBE0622B294FD0033126A /* KeyedStorage.swift */,
+				3E1EBE0722B294FD0033126A /* XMLCoderElement.swift */,
+			);
+			path = Auxiliaries;
+			sourceTree = "<group>";
+		};
+		3E1EBDF122B294FD0033126A /* Box */ = {
+			isa = PBXGroup;
+			children = (
+				3E1EBDF222B294FD0033126A /* IntBox.swift */,
+				3E1EBDF322B294FD0033126A /* UnkeyedBox.swift */,
+				3E1EBDF422B294FD0033126A /* DateBox.swift */,
+				3E1EBDF522B294FD0033126A /* FloatBox.swift */,
+				3E1EBDF622B294FD0033126A /* KeyedBox.swift */,
+				3E1EBDF722B294FD0033126A /* Box.swift */,
+				3E1EBDF822B294FD0033126A /* NullBox.swift */,
+				3E1EBDF922B294FD0033126A /* UIntBox.swift */,
+				3E1EBDFA22B294FD0033126A /* URLBox.swift */,
+				3E1EBDFB22B294FD0033126A /* SharedBox.swift */,
+				3E1EBDFC22B294FD0033126A /* DecimalBox.swift */,
+				3E1EBDFD22B294FD0033126A /* DataBox.swift */,
+				3E1EBDFE22B294FD0033126A /* BoolBox.swift */,
+				3E1EBDFF22B294FD0033126A /* StringBox.swift */,
+			);
+			path = Box;
+			sourceTree = "<group>";
+		};
 		OBJ_15 /* Encoder */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_16 /* EncodingErrorExtension.swift */,
-				OBJ_17 /* XMLEncoder.swift */,
-				OBJ_18 /* XMLEncodingStorage.swift */,
-				OBJ_19 /* XMLReferencingEncoder.swift */,
+				3E1EBDCA22B294730033126A /* DynamicNodeEncoding.swift */,
+				3E1EBDC622B294720033126A /* EncodingErrorExtension.swift */,
+				3E1EBDC722B294720033126A /* SingleValueEncodingContainer.swift */,
+				3E1EBDC522B294720033126A /* XMLEncoder.swift */,
+				3E1EBDCD22B294730033126A /* XMLEncoderImplementation.swift */,
+				3E1EBDCC22B294730033126A /* XMLEncodingStorage.swift */,
+				3E1EBDC922B294730033126A /* XMLKeyedEncodingContainer.swift */,
+				3E1EBDC822B294720033126A /* XMLReferencingEncoder.swift */,
+				3E1EBDCB22B294730033126A /* XMLUnkeyedEncodingContainer.swift */,
 			);
 			path = Encoder;
 			sourceTree = "<group>";
@@ -153,11 +249,9 @@
 		OBJ_8 /* XMLParsing */ = {
 			isa = PBXGroup;
 			children = (
+				3E1EBDF022B294FD0033126A /* Auxiliaries */,
 				OBJ_9 /* Decoder */,
 				OBJ_15 /* Encoder */,
-				OBJ_20 /* ISO8601DateFormatter.swift */,
-				OBJ_21 /* XMLKey.swift */,
-				OBJ_22 /* XMLStackParser.swift */,
 			);
 			name = XMLParsing;
 			path = Sources/XMLParsing;
@@ -166,11 +260,14 @@
 		OBJ_9 /* Decoder */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_10 /* DecodingErrorExtension.swift */,
-				OBJ_11 /* XMLDecoder.swift */,
-				OBJ_12 /* XMLDecodingStorage.swift */,
-				OBJ_13 /* XMLKeyedDecodingContainer.swift */,
-				OBJ_14 /* XMLUnkeyedDecodingContainer.swift */,
+				3E1EBDE622B294C30033126A /* DecodingErrorExtension.swift */,
+				3E1EBDE522B294C30033126A /* DynamicNodeDecoding.swift */,
+				3E1EBDE222B294C20033126A /* SingleValueDecodingContainer.swift */,
+				3E1EBDE122B294C20033126A /* XMLDecoder.swift */,
+				3E1EBDE322B294C20033126A /* XMLDecoderImplementation.swift */,
+				3E1EBDE022B294C20033126A /* XMLDecodingStorage.swift */,
+				3E1EBDE722B294C30033126A /* XMLKeyedDecodingContainer.swift */,
+				3E1EBDE422B294C20033126A /* XMLUnkeyedDecodingContainer.swift */,
 			);
 			path = Decoder;
 			sourceTree = "<group>";
@@ -283,18 +380,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_50 /* DecodingErrorExtension.swift in Sources */,
-				OBJ_51 /* XMLDecoder.swift in Sources */,
-				OBJ_52 /* XMLDecodingStorage.swift in Sources */,
-				OBJ_53 /* XMLKeyedDecodingContainer.swift in Sources */,
-				OBJ_54 /* XMLUnkeyedDecodingContainer.swift in Sources */,
-				OBJ_55 /* EncodingErrorExtension.swift in Sources */,
-				OBJ_56 /* XMLEncoder.swift in Sources */,
-				OBJ_57 /* XMLEncodingStorage.swift in Sources */,
-				OBJ_58 /* XMLReferencingEncoder.swift in Sources */,
-				OBJ_59 /* ISO8601DateFormatter.swift in Sources */,
-				OBJ_60 /* XMLKey.swift in Sources */,
-				OBJ_61 /* XMLStackParser.swift in Sources */,
+				3E1EBE1322B294FE0033126A /* DataBox.swift in Sources */,
+				3E1EBE1A22B294FE0033126A /* ISO8601DateFormatter.swift in Sources */,
+				3E1EBE1722B294FE0033126A /* String+Extensions.swift in Sources */,
+				3E1EBE1922B294FE0033126A /* Metatypes.swift in Sources */,
+				3E1EBDDD22B294990033126A /* XMLKeyedEncodingContainer.swift in Sources */,
+				3E1EBDEF22B294C30033126A /* XMLKeyedDecodingContainer.swift in Sources */,
+				3E1EBE0922B294FE0033126A /* UnkeyedBox.swift in Sources */,
+				3E1EBE1622B294FE0033126A /* XMLHeader.swift in Sources */,
+				3E1EBE1222B294FE0033126A /* DecimalBox.swift in Sources */,
+				3E1EBDD722B294990033126A /* DynamicNodeEncoding.swift in Sources */,
+				3E1EBE0E22B294FE0033126A /* NullBox.swift in Sources */,
+				3E1EBDDB22B294990033126A /* XMLEncoderImplementation.swift in Sources */,
+				3E1EBE1522B294FE0033126A /* StringBox.swift in Sources */,
+				3E1EBDDA22B294990033126A /* XMLEncoder.swift in Sources */,
+				3E1EBE1422B294FE0033126A /* BoolBox.swift in Sources */,
+				3E1EBE1822B294FE0033126A /* XMLStackParser.swift in Sources */,
+				3E1EBDE822B294C30033126A /* XMLDecodingStorage.swift in Sources */,
+				3E1EBDD922B294990033126A /* SingleValueEncodingContainer.swift in Sources */,
+				3E1EBDEB22B294C30033126A /* XMLDecoderImplementation.swift in Sources */,
+				3E1EBDDF22B294990033126A /* XMLUnkeyedEncodingContainer.swift in Sources */,
+				3E1EBDEE22B294C30033126A /* DecodingErrorExtension.swift in Sources */,
+				3E1EBDEA22B294C30033126A /* SingleValueDecodingContainer.swift in Sources */,
+				3E1EBE1C22B294FE0033126A /* KeyedStorage.swift in Sources */,
+				3E1EBDE922B294C30033126A /* XMLDecoder.swift in Sources */,
+				3E1EBE1122B294FE0033126A /* SharedBox.swift in Sources */,
+				3E1EBE1B22B294FE0033126A /* XMLKey.swift in Sources */,
+				3E1EBE0D22B294FE0033126A /* Box.swift in Sources */,
+				3E1EBDD822B294990033126A /* EncodingErrorExtension.swift in Sources */,
+				3E1EBE0C22B294FE0033126A /* KeyedBox.swift in Sources */,
+				3E1EBE1022B294FE0033126A /* URLBox.swift in Sources */,
+				3E1EBE0B22B294FE0033126A /* FloatBox.swift in Sources */,
+				3E1EBDEC22B294C30033126A /* XMLUnkeyedDecodingContainer.swift in Sources */,
+				3E1EBDDC22B294990033126A /* XMLEncodingStorage.swift in Sources */,
+				3E1EBE1D22B294FE0033126A /* XMLCoderElement.swift in Sources */,
+				3E1EBDED22B294C30033126A /* DynamicNodeDecoding.swift in Sources */,
+				3E1EBE0F22B294FE0033126A /* UIntBox.swift in Sources */,
+				3E1EBDDE22B294990033126A /* XMLReferencingEncoder.swift in Sources */,
+				3E1EBE0822B294FE0033126A /* IntBox.swift in Sources */,
+				3E1EBE0A22B294FE0033126A /* DateBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

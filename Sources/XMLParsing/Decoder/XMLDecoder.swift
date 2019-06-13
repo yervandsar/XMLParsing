@@ -1,6 +1,6 @@
 //
 //  XMLDecoder.swift
-//  XMLParsing
+//  XMLCoder
 //
 //  Created by Shawn Moore on 11/20/17.
 //  Copyright © 2017 Shawn Moore. All rights reserved.
@@ -15,101 +15,130 @@ import Foundation
 /// `XMLDecoder` facilitates the decoding of XML into semantic `Decodable` types.
 open class XMLDecoder {
     // MARK: Options
+
     /// The strategy to use for decoding `Date` values.
     public enum DateDecodingStrategy {
         /// Defer to `Date` for decoding. This is the default strategy.
         case deferredToDate
-        
+
         /// Decode the `Date` as a UNIX timestamp from a XML number. This is the default strategy.
         case secondsSince1970
-        
+
         /// Decode the `Date` as UNIX millisecond timestamp from a XML number.
         case millisecondsSince1970
-        
+
         /// Decode the `Date` as an ISO-8601-formatted string (in RFC 3339 format).
         @available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
         case iso8601
-        
+
         /// Decode the `Date` as a string parsed by the given formatter.
         case formatted(DateFormatter)
-        
-        /// Decode the `Date` as a custom value decoded by the given closure.
+
+        /// Decode the `Date` as a custom box decoded by the given closure.
         case custom((_ decoder: Decoder) throws -> Date)
-        
+
         /// Decode the `Date` as a string parsed by the given formatter for the give key.
-        static func keyFormatted(_ formatterForKey: @escaping (CodingKey) throws -> DateFormatter?) -> XMLDecoder.DateDecodingStrategy {
-            return .custom({ (decoder) -> Date in
+        static func keyFormatted(
+            _ formatterForKey: @escaping (CodingKey) throws -> DateFormatter?
+        ) -> XMLDecoder.DateDecodingStrategy {
+            return .custom { (decoder) -> Date in
                 guard let codingKey = decoder.codingPath.last else {
-                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "No Coding Path Found"))
+                    throw DecodingError.dataCorrupted(DecodingError.Context(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "No Coding Path Found"
+                    ))
                 }
-                
+
                 guard let container = try? decoder.singleValueContainer(),
                     let text = try? container.decode(String.self) else {
-                        throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Could not decode date text"))
+                    throw DecodingError.dataCorrupted(DecodingError.Context(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "Could not decode date text"
+                    ))
                 }
-                
+
                 guard let dateFormatter = try formatterForKey(codingKey) else {
-                    throw DecodingError.dataCorruptedError(in: container, debugDescription: "No date formatter for date text")
+                    throw DecodingError.dataCorruptedError(
+                        in: container,
+                        debugDescription: "No date formatter for date text"
+                    )
                 }
-                
+
                 if let date = dateFormatter.date(from: text) {
                     return date
                 } else {
-                    throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(text)")
+                    throw DecodingError.dataCorruptedError(
+                        in: container,
+                        debugDescription: "Cannot decode date string \(text)"
+                    )
                 }
-            })
+            }
         }
     }
-    
+
     /// The strategy to use for decoding `Data` values.
     public enum DataDecodingStrategy {
         /// Defer to `Data` for decoding.
         case deferredToData
-        
+
         /// Decode the `Data` from a Base64-encoded string. This is the default strategy.
         case base64
-        
-        /// Decode the `Data` as a custom value decoded by the given closure.
+
+        /// Decode the `Data` as a custom box decoded by the given closure.
         case custom((_ decoder: Decoder) throws -> Data)
-        
-        /// Decode the `Data` as a custom value by the given closure for the give key.
-        static func keyFormatted(_ formatterForKey: @escaping (CodingKey) throws -> Data?) -> XMLDecoder.DataDecodingStrategy {
-            return .custom({ (decoder) -> Data in
+
+        /// Decode the `Data` as a custom box by the given closure for the give key.
+        static func keyFormatted(
+            _ formatterForKey: @escaping (CodingKey) throws -> Data?
+        ) -> XMLDecoder.DataDecodingStrategy {
+            return .custom { (decoder) -> Data in
                 guard let codingKey = decoder.codingPath.last else {
-                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "No Coding Path Found"))
+                    throw DecodingError.dataCorrupted(DecodingError.Context(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "No Coding Path Found"
+                    ))
                 }
-                
+
                 guard let container = try? decoder.singleValueContainer(),
                     let text = try? container.decode(String.self) else {
-                        throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Could not decode date text"))
+                    throw DecodingError.dataCorrupted(DecodingError.Context(
+                        codingPath: decoder.codingPath,
+                        debugDescription: "Could not decode date text"
+                    ))
                 }
-                
+
                 guard let data = try formatterForKey(codingKey) else {
-                    throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode data string \(text)")
+                    throw DecodingError.dataCorruptedError(
+                        in: container,
+                        debugDescription: "Cannot decode data string \(text)"
+                    )
                 }
-                
+
                 return data
-            })
+            }
         }
     }
-    
+
     /// The strategy to use for non-XML-conforming floating-point values (IEEE 754 infinity and NaN).
     public enum NonConformingFloatDecodingStrategy {
         /// Throw upon encountering non-conforming values. This is the default strategy.
         case `throw`
-        
+
         /// Decode the values from the given representation strings.
         case convertFromString(positiveInfinity: String, negativeInfinity: String, nan: String)
     }
-    
-    /// The strategy to use for automatically changing the value of keys before decoding.
+
+    /// The strategy to use for automatically changing the box of keys before decoding.
     public enum KeyDecodingStrategy {
         /// Use the keys specified by each type. This is the default strategy.
         case useDefaultKeys
-        
-        /// Convert from "snake_case_keys" to "camelCaseKeys" before attempting to match a key with the one specified by each type.
+
+        /// Convert from "snake_case_keys" to "camelCaseKeys" before attempting
+        /// to match a key with the one specified by each type.
         ///
-        /// The conversion to upper case uses `Locale.system`, also known as the ICU "root" locale. This means the result is consistent regardless of the current user's locale and language preferences.
+        /// The conversion to upper case uses `Locale.system`, also known as
+        /// the ICU "root" locale. This means the result is consistent
+        /// regardless of the current user's locale and language preferences.
         ///
         /// Converting from snake case to camel case:
         /// 1. Capitalizes the word starting after each `_`
@@ -119,704 +148,223 @@ open class XMLDecoder {
         ///
         /// - Note: Using a key decoding strategy has a nominal performance cost, as each string key has to be inspected for the `_` character.
         case convertFromSnakeCase
-        
-        /// Provide a custom conversion from the key in the encoded JSON to the keys specified by the decoded types.
-        /// The full path to the current decoding position is provided for context (in case you need to locate this key within the payload). The returned key is used in place of the last component in the coding path before decoding.
-        /// If the result of the conversion is a duplicate key, then only one value will be present in the container for the type to decode from.
+
+        /// Convert from "kebab-case" to "kebabCase" before attempting
+        /// to match a key with the one specified by each type.
+        case convertFromKebabCase
+
+        /// Convert from "CodingKey" to "codingKey"
+        case convertFromCapitalized
+
+        /// Provide a custom conversion from the key in the encoded XML to the
+        /// keys specified by the decoded types.
+        /// The full path to the current decoding position is provided for
+        /// context (in case you need to locate this key within the payload).
+        /// The returned key is used in place of the last component in the
+        /// coding path before decoding.
+        /// If the result of the conversion is a duplicate key, then only one
+        /// box will be present in the container for the type to decode from.
         case custom((_ codingPath: [CodingKey]) -> CodingKey)
-        
-        internal static func _convertFromSnakeCase(_ stringKey: String) -> String {
-            guard !stringKey.isEmpty else { return stringKey }
-            
-            // Find the first non-underscore character
-            guard let firstNonUnderscore = stringKey.firstIndex(where: { $0 != "_" }) else {
-                // Reached the end without finding an _
+
+        static func _convertFromCapitalized(_ stringKey: String) -> String {
+            guard !stringKey.isEmpty else {
                 return stringKey
             }
-            
-            // Find the last non-underscore character
-            var lastNonUnderscore = stringKey.index(before: stringKey.endIndex)
-            while lastNonUnderscore > firstNonUnderscore && stringKey[lastNonUnderscore] == "_" {
-                stringKey.formIndex(before: &lastNonUnderscore)
+            let firstLetter = stringKey.prefix(1).lowercased()
+            let result = firstLetter + stringKey.dropFirst()
+            return result
+        }
+
+        static func _convertFromSnakeCase(_ stringKey: String) -> String {
+            return _convert(stringKey, usingSeparator: "_")
+        }
+
+        static func _convertFromKebabCase(_ stringKey: String) -> String {
+            return _convert(stringKey, usingSeparator: "-")
+        }
+
+        static func _convert(_ stringKey: String, usingSeparator separator: Character) -> String {
+            guard !stringKey.isEmpty else {
+                return stringKey
             }
-            
-            let keyRange = firstNonUnderscore...lastNonUnderscore
-            let leadingUnderscoreRange = stringKey.startIndex..<firstNonUnderscore
-            let trailingUnderscoreRange = stringKey.index(after: lastNonUnderscore)..<stringKey.endIndex
-            
-            var components = stringKey[keyRange].split(separator: "_")
-            let joinedString : String
+
+            // Find the first non-separator character
+            guard let firstNonSeparator = stringKey.firstIndex(where: { $0 != separator }) else {
+                // Reached the end without finding a separator character
+                return stringKey
+            }
+
+            // Find the last non-separator character
+            var lastNonSeparator = stringKey.index(before: stringKey.endIndex)
+            while lastNonSeparator > firstNonSeparator, stringKey[lastNonSeparator] == separator {
+                stringKey.formIndex(before: &lastNonSeparator)
+            }
+
+            let keyRange = firstNonSeparator...lastNonSeparator
+            let leadingSeparatorRange = stringKey.startIndex..<firstNonSeparator
+            let trailingSeparatorRange = stringKey.index(after: lastNonSeparator)..<stringKey.endIndex
+
+            var components = stringKey[keyRange].split(separator: separator)
+            let joinedString: String
             if components.count == 1 {
-                // No underscores in key, leave the word as is - maybe already camel cased
+                // No separators in key, leave the word as is - maybe it is already good
                 joinedString = String(stringKey[keyRange])
             } else {
                 joinedString = ([components[0].lowercased()] + components[1...].map { $0.capitalized }).joined()
             }
-            
+
             // Do a cheap isEmpty check before creating and appending potentially empty strings
-            let result : String
-            if (leadingUnderscoreRange.isEmpty && trailingUnderscoreRange.isEmpty) {
+            let result: String
+            if leadingSeparatorRange.isEmpty, trailingSeparatorRange.isEmpty {
                 result = joinedString
-            } else if (!leadingUnderscoreRange.isEmpty && !trailingUnderscoreRange.isEmpty) {
+            } else if !leadingSeparatorRange.isEmpty, !trailingSeparatorRange.isEmpty {
                 // Both leading and trailing underscores
-                result = String(stringKey[leadingUnderscoreRange]) + joinedString + String(stringKey[trailingUnderscoreRange])
-            } else if (!leadingUnderscoreRange.isEmpty) {
+                result = String(stringKey[leadingSeparatorRange]) + joinedString + String(stringKey[trailingSeparatorRange])
+            } else if !leadingSeparatorRange.isEmpty {
                 // Just leading
-                result = String(stringKey[leadingUnderscoreRange]) + joinedString
+                result = String(stringKey[leadingSeparatorRange]) + joinedString
             } else {
                 // Just trailing
-                result = joinedString + String(stringKey[trailingUnderscoreRange])
+                result = joinedString + String(stringKey[trailingSeparatorRange])
             }
             return result
         }
     }
-    
+
     /// The strategy to use in decoding dates. Defaults to `.secondsSince1970`.
     open var dateDecodingStrategy: DateDecodingStrategy = .secondsSince1970
-    
+
     /// The strategy to use in decoding binary data. Defaults to `.base64`.
     open var dataDecodingStrategy: DataDecodingStrategy = .base64
-    
+
     /// The strategy to use in decoding non-conforming numbers. Defaults to `.throw`.
     open var nonConformingFloatDecodingStrategy: NonConformingFloatDecodingStrategy = .throw
-    
+
     /// The strategy to use for decoding keys. Defaults to `.useDefaultKeys`.
     open var keyDecodingStrategy: KeyDecodingStrategy = .useDefaultKeys
-    
+
+    /// A node's decoding type
+    public enum NodeDecoding {
+        case attribute
+        case element
+        case elementOrAttribute
+    }
+
+    /// The strategy to use in encoding encoding attributes. Defaults to `.deferredToEncoder`.
+    open var nodeDecodingStrategy: NodeDecodingStrategy = .deferredToDecoder
+
+    /// Set of strategies to use for encoding of nodes.
+    public enum NodeDecodingStrategy {
+        /// Defer to `Encoder` for choosing an encoding. This is the default strategy.
+        case deferredToDecoder
+
+        /// Return a closure computing the desired node encoding for the value by its coding key.
+        case custom((Decodable.Type, Decoder) -> ((CodingKey) -> NodeDecoding))
+
+        func nodeDecodings(
+            forType codableType: Decodable.Type,
+            with decoder: Decoder
+        ) -> ((CodingKey) -> NodeDecoding) {
+            switch self {
+            case .deferredToDecoder:
+                guard let dynamicType = codableType as? DynamicNodeDecoding.Type else {
+                    return { _ in .elementOrAttribute }
+                }
+                return dynamicType.nodeDecoding(for:)
+            case let .custom(closure):
+                return closure(codableType, decoder)
+            }
+        }
+    }
+
     /// Contextual user-provided information for use during decoding.
-    open var userInfo: [CodingUserInfoKey : Any] = [:]
-    
+    open var userInfo: [CodingUserInfoKey: Any] = [:]
+
+    /// The error context length. Non-zero length makes an error thrown from
+    /// the XML parser with line/column location repackaged with a context
+    /// around that location of specified length. For example, if an error was
+    /// thrown indicating that there's an unexpected character at line 3, column
+    /// 15 with `errorContextLength` set to 10, a new error type is rethrown
+    /// containing 5 characters before column 15 and 5 characters after, all on
+    /// line 3. Line wrapping should be handled correctly too as the context can
+    /// span more than a few lines.
+    open var errorContextLength: UInt = 0
+
+    /** A boolean value that determines whether the parser reports the
+     namespaces and qualified names of elements. The default value is `false`.
+     */
+    open var shouldProcessNamespaces: Bool = false
+
+    /** A boolean value that determines whether the parser trims whitespaces
+     and newlines from the end and the beginning of string values.
+     */
+    open var trimValueWhitespaces: Bool
+
     /// Options set on the top-level encoder to pass down the decoding hierarchy.
-    internal struct _Options {
+    struct Options {
         let dateDecodingStrategy: DateDecodingStrategy
         let dataDecodingStrategy: DataDecodingStrategy
         let nonConformingFloatDecodingStrategy: NonConformingFloatDecodingStrategy
         let keyDecodingStrategy: KeyDecodingStrategy
-        let userInfo: [CodingUserInfoKey : Any]
+        let nodeDecodingStrategy: NodeDecodingStrategy
+        let userInfo: [CodingUserInfoKey: Any]
     }
-    
+
     /// The options set on the top-level decoder.
-    internal var options: _Options {
-        return _Options(dateDecodingStrategy: dateDecodingStrategy,
-                        dataDecodingStrategy: dataDecodingStrategy,
-                        nonConformingFloatDecodingStrategy: nonConformingFloatDecodingStrategy,
-                        keyDecodingStrategy: keyDecodingStrategy,
-                        userInfo: userInfo)
+    var options: Options {
+        return Options(
+            dateDecodingStrategy: dateDecodingStrategy,
+            dataDecodingStrategy: dataDecodingStrategy,
+            nonConformingFloatDecodingStrategy: nonConformingFloatDecodingStrategy,
+            keyDecodingStrategy: keyDecodingStrategy,
+            nodeDecodingStrategy: nodeDecodingStrategy,
+            userInfo: userInfo
+        )
     }
-    
+
     // MARK: - Constructing a XML Decoder
+
     /// Initializes `self` with default strategies.
-    public init() {}
-    
+    public init(trimValueWhitespaces: Bool = true) {
+        self.trimValueWhitespaces = trimValueWhitespaces
+    }
+
     // MARK: - Decoding Values
-    /// Decodes a top-level value of the given type from the given XML representation.
+
+    /// Decodes a top-level box of the given type from the given XML representation.
     ///
-    /// - parameter type: The type of the value to decode.
+    /// - parameter type: The type of the box to decode.
     /// - parameter data: The data to decode from.
-    /// - returns: A value of the requested type.
+    /// - returns: A box of the requested type.
     /// - throws: `DecodingError.dataCorrupted` if values requested from the payload are corrupted, or if the given data is not valid XML.
-    /// - throws: An error if any value throws an error during decoding.
-    open func decode<T : Decodable>(_ type: T.Type, from data: Data) throws -> T {
-        let topLevel: [String: Any]
-        do {
-            topLevel = try _XMLStackParser.parse(with: data)
-        } catch {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "The given data was not valid XML.", underlyingError: error))
+    /// - throws: An error if any box throws an error during decoding.
+    open func decode<T: Decodable>(
+        _ type: T.Type,
+        from data: Data
+    ) throws -> T {
+        let topLevel: Box = try XMLStackParser.parse(
+            with: data,
+            errorContextLength: errorContextLength,
+            shouldProcessNamespaces: shouldProcessNamespaces,
+            trimValueWhitespaces: trimValueWhitespaces
+        )
+
+        let decoder = XMLDecoderImplementation(
+            referencing: topLevel,
+            options: options,
+            nodeDecodings: []
+        )
+        decoder.nodeDecodings = [
+            options.nodeDecodingStrategy.nodeDecodings(
+                forType: T.self,
+                with: decoder
+            ),
+        ]
+
+        defer {
+            _ = decoder.nodeDecodings.removeLast()
         }
-        
-        let decoder = _XMLDecoder(referencing: topLevel, options: self.options)
-        
-        guard let value = try decoder.unbox(topLevel, as: type) else {
-            throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: [], debugDescription: "The given data did not contain a top-level value."))
-        }
-        
-        return value
+
+        return try decoder.unbox(topLevel)
     }
 }
-
-// MARK: - _XMLDecoder
-
-internal class _XMLDecoder : Decoder {
-    // MARK: Properties
-    
-    /// The decoder's storage.
-    internal var storage: _XMLDecodingStorage
-    
-    /// Options set on the top-level decoder.
-    internal let options: XMLDecoder._Options
-    
-    /// The path to the current point in encoding.
-    internal(set) public var codingPath: [CodingKey]
-    
-    /// Contextual user-provided information for use during encoding.
-    public var userInfo: [CodingUserInfoKey : Any] {
-        return self.options.userInfo
-    }
-    
-    // MARK: - Initialization
-    
-    /// Initializes `self` with the given top-level container and options.
-    internal init(referencing container: Any, at codingPath: [CodingKey] = [], options: XMLDecoder._Options) {
-        self.storage = _XMLDecodingStorage()
-        self.storage.push(container: container)
-        self.codingPath = codingPath
-        self.options = options
-    }
-    
-    // MARK: - Decoder Methods
-    
-    public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> {
-        guard !(self.storage.topContainer is NSNull) else {
-            throw DecodingError.valueNotFound(KeyedDecodingContainer<Key>.self,
-                                              DecodingError.Context(codingPath: self.codingPath,
-                                                                    debugDescription: "Cannot get keyed decoding container -- found null value instead."))
-        }
-        
-        guard let topContainer = self.storage.topContainer as? [String : Any] else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: [String : Any].self, reality: self.storage.topContainer)
-        }
-        
-        let container = _XMLKeyedDecodingContainer<Key>(referencing: self, wrapping: topContainer)
-        return KeyedDecodingContainer(container)
-    }
-    
-    public func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        guard !(self.storage.topContainer is NSNull) else {
-            throw DecodingError.valueNotFound(UnkeyedDecodingContainer.self,
-                                              DecodingError.Context(codingPath: self.codingPath,
-                                                                    debugDescription: "Cannot get unkeyed decoding container -- found null value instead."))
-        }
-        
-        let topContainer: [Any]
-        
-        if let container = self.storage.topContainer as? [Any] {
-            topContainer = container
-        } else if let container = self.storage.topContainer as? [AnyHashable: Any]  {
-            topContainer = [container]
-        } else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: [Any].self, reality: self.storage.topContainer)
-        }
-        
-        return _XMLUnkeyedDecodingContainer(referencing: self, wrapping: topContainer)
-    }
-    
-    public func singleValueContainer() throws -> SingleValueDecodingContainer {
-        return self
-    }
-}
-
-
-extension _XMLDecoder : SingleValueDecodingContainer {
-    // MARK: SingleValueDecodingContainer Methods
-    
-    private func expectNonNull<T>(_ type: T.Type) throws {
-        guard !self.decodeNil() else {
-            throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected \(type) but found null value instead."))
-        }
-    }
-    
-    public func decodeNil() -> Bool {
-        return self.storage.topContainer is NSNull
-    }
-    
-    public func decode(_ type: Bool.Type) throws -> Bool {
-        try expectNonNull(Bool.self)
-        return try self.unbox(self.storage.topContainer, as: Bool.self)!
-    }
-    
-    public func decode(_ type: Int.Type) throws -> Int {
-        try expectNonNull(Int.self)
-        return try self.unbox(self.storage.topContainer, as: Int.self)!
-    }
-    
-    public func decode(_ type: Int8.Type) throws -> Int8 {
-        try expectNonNull(Int8.self)
-        return try self.unbox(self.storage.topContainer, as: Int8.self)!
-    }
-    
-    public func decode(_ type: Int16.Type) throws -> Int16 {
-        try expectNonNull(Int16.self)
-        return try self.unbox(self.storage.topContainer, as: Int16.self)!
-    }
-    
-    public func decode(_ type: Int32.Type) throws -> Int32 {
-        try expectNonNull(Int32.self)
-        return try self.unbox(self.storage.topContainer, as: Int32.self)!
-    }
-    
-    public func decode(_ type: Int64.Type) throws -> Int64 {
-        try expectNonNull(Int64.self)
-        return try self.unbox(self.storage.topContainer, as: Int64.self)!
-    }
-    
-    public func decode(_ type: UInt.Type) throws -> UInt {
-        try expectNonNull(UInt.self)
-        return try self.unbox(self.storage.topContainer, as: UInt.self)!
-    }
-    
-    public func decode(_ type: UInt8.Type) throws -> UInt8 {
-        try expectNonNull(UInt8.self)
-        return try self.unbox(self.storage.topContainer, as: UInt8.self)!
-    }
-    
-    public func decode(_ type: UInt16.Type) throws -> UInt16 {
-        try expectNonNull(UInt16.self)
-        return try self.unbox(self.storage.topContainer, as: UInt16.self)!
-    }
-    
-    public func decode(_ type: UInt32.Type) throws -> UInt32 {
-        try expectNonNull(UInt32.self)
-        return try self.unbox(self.storage.topContainer, as: UInt32.self)!
-    }
-    
-    public func decode(_ type: UInt64.Type) throws -> UInt64 {
-        try expectNonNull(UInt64.self)
-        return try self.unbox(self.storage.topContainer, as: UInt64.self)!
-    }
-    
-    public func decode(_ type: Float.Type) throws -> Float {
-        try expectNonNull(Float.self)
-        return try self.unbox(self.storage.topContainer, as: Float.self)!
-    }
-    
-    public func decode(_ type: Double.Type) throws -> Double {
-        try expectNonNull(Double.self)
-        return try self.unbox(self.storage.topContainer, as: Double.self)!
-    }
-    
-    public func decode(_ type: String.Type) throws -> String {
-        try expectNonNull(String.self)
-        return try self.unbox(self.storage.topContainer, as: String.self)!
-    }
-    
-    public func decode<T : Decodable>(_ type: T.Type) throws -> T {
-        try expectNonNull(type)
-        return try self.unbox(self.storage.topContainer, as: type)!
-    }
-}
-
-// MARK: - Concrete Value Representations
-
-extension _XMLDecoder {
-    /// Returns the given value unboxed from a container.
-    internal func unbox(_ value: Any, as type: Bool.Type) throws -> Bool? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let value = value as? String else { return nil }
-        
-        if value == "true" || value == "1" {
-            return true
-        } else if value == "false" || value == "0" {
-            return false
-        }
-        
-        throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-    }
-    
-    internal func unbox(_ value: Any, as type: Int.Type) throws -> Int? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let int = number.intValue
-        guard NSNumber(value: int) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return int
-    }
-    
-    internal func unbox(_ value: Any, as type: Int8.Type) throws -> Int8? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let int8 = number.int8Value
-        guard NSNumber(value: int8) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return int8
-    }
-    
-    internal func unbox(_ value: Any, as type: Int16.Type) throws -> Int16? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let int16 = number.int16Value
-        guard NSNumber(value: int16) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return int16
-    }
-    
-    internal func unbox(_ value: Any, as type: Int32.Type) throws -> Int32? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let int32 = number.int32Value
-        guard NSNumber(value: int32) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return int32
-    }
-    
-    internal func unbox(_ value: Any, as type: Int64.Type) throws -> Int64? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let int64 = number.int64Value
-        guard NSNumber(value: int64) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return int64
-    }
-    
-    internal func unbox(_ value: Any, as type: UInt.Type) throws -> UInt? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let uint = number.uintValue
-        guard NSNumber(value: uint) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return uint
-    }
-    
-    internal func unbox(_ value: Any, as type: UInt8.Type) throws -> UInt8? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let uint8 = number.uint8Value
-        guard NSNumber(value: uint8) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return uint8
-    }
-    
-    internal func unbox(_ value: Any, as type: UInt16.Type) throws -> UInt16? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let uint16 = number.uint16Value
-        guard NSNumber(value: uint16) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return uint16
-    }
-    
-    internal func unbox(_ value: Any, as type: UInt32.Type) throws -> UInt32? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let uint32 = number.uint32Value
-        guard NSNumber(value: uint32) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return uint32
-    }
-    
-    internal func unbox(_ value: Any, as type: UInt64.Type) throws -> UInt64? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        guard let value = Float(string) else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: string)
-        }
-        
-        let number = NSNumber(value: value)
-        
-        guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        let uint64 = number.uint64Value
-        guard NSNumber(value: uint64) == number else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number <\(number)> does not fit in \(type)."))
-        }
-        
-        return uint64
-    }
-    
-    internal func unbox(_ value: Any, as type: Float.Type) throws -> Float? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        if let value = Double(string) {
-            let number = NSNumber(value: value)
-            
-            guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-                throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-            }
-            
-            let double = number.doubleValue
-            guard abs(double) <= Double(Float.greatestFiniteMagnitude) else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Parsed XML number \(number) does not fit in \(type)."))
-            }
-            
-            return Float(double)
-        } else if case let .convertFromString(posInfString, negInfString, nanString) = self.options.nonConformingFloatDecodingStrategy {
-            if string == posInfString {
-                return Float.infinity
-            } else if string == negInfString {
-                return -Float.infinity
-            } else if string == nanString {
-                return Float.nan
-            }
-        }
-        
-        throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-    }
-    
-    internal func unbox(_ value: Any, as type: Double.Type) throws -> Double? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else { return nil }
-        
-        if let number = Decimal(string: string) as NSDecimalNumber? {
-            
-            guard number !== kCFBooleanTrue, number !== kCFBooleanFalse else {
-                throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-            }
-            
-            return number.doubleValue
-        } else if case let .convertFromString(posInfString, negInfString, nanString) = self.options.nonConformingFloatDecodingStrategy {
-            if string == posInfString {
-                return Double.infinity
-            } else if string == negInfString {
-                return -Double.infinity
-            } else if string == nanString {
-                return Double.nan
-            }
-        }
-        
-        throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-    }
-    
-    internal func unbox(_ value: Any, as type: String.Type) throws -> String? {
-        guard !(value is NSNull) else { return nil }
-        
-        guard let string = value as? String else {
-            throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-        }
-        
-        return string
-    }
-    
-    internal func unbox(_ value: Any, as type: Date.Type) throws -> Date? {
-        guard !(value is NSNull) else { return nil }
-        
-        switch self.options.dateDecodingStrategy {
-        case .deferredToDate:
-            self.storage.push(container: value)
-            defer { self.storage.popContainer() }
-            return try Date(from: self)
-            
-        case .secondsSince1970:
-            let double = try self.unbox(value, as: Double.self)!
-            return Date(timeIntervalSince1970: double)
-            
-        case .millisecondsSince1970:
-            let double = try self.unbox(value, as: Double.self)!
-            return Date(timeIntervalSince1970: double / 1000.0)
-            
-        case .iso8601:
-            if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
-                let string = try self.unbox(value, as: String.self)!
-                guard let date = _iso8601Formatter.date(from: string) else {
-                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
-                }
-                
-                return date
-            } else {
-                fatalError("ISO8601DateFormatter is unavailable on this platform.")
-            }
-            
-        case .formatted(let formatter):
-            let string = try self.unbox(value, as: String.self)!
-            guard let date = formatter.date(from: string) else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Date string does not match format expected by formatter."))
-            }
-            
-            return date
-            
-        case .custom(let closure):
-            self.storage.push(container: value)
-            defer { self.storage.popContainer() }
-            return try closure(self)
-        }
-    }
-    
-    internal func unbox(_ value: Any, as type: Data.Type) throws -> Data? {
-        guard !(value is NSNull) else { return nil }
-        
-        switch self.options.dataDecodingStrategy {
-        case .deferredToData:
-            self.storage.push(container: value)
-            defer { self.storage.popContainer() }
-            return try Data(from: self)
-            
-        case .base64:
-            guard let string = value as? String else {
-                throw DecodingError._typeMismatch(at: self.codingPath, expectation: type, reality: value)
-            }
-            
-            guard let data = Data(base64Encoded: string) else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Encountered Data is not valid Base64."))
-            }
-            
-            return data
-            
-        case .custom(let closure):
-            self.storage.push(container: value)
-            defer { self.storage.popContainer() }
-            return try closure(self)
-        }
-    }
-    
-    internal func unbox(_ value: Any, as type: Decimal.Type) throws -> Decimal? {
-        guard !(value is NSNull) else { return nil }
-        
-        // Attempt to bridge from NSDecimalNumber.
-        let doubleValue = try self.unbox(value, as: Double.self)!
-        return Decimal(doubleValue)
-    }
-    
-    internal func unbox<T : Decodable>(_ value: Any, as type: T.Type) throws -> T? {
-        let decoded: T
-        if type == Date.self || type == NSDate.self {
-            guard let date = try self.unbox(value, as: Date.self) else { return nil }
-            decoded = date as! T
-        } else if type == Data.self || type == NSData.self {
-            guard let data = try self.unbox(value, as: Data.self) else { return nil }
-            decoded = data as! T
-        } else if type == URL.self || type == NSURL.self {
-            guard let urlString = try self.unbox(value, as: String.self) else {
-                return nil
-            }
-            
-            guard let url = URL(string: urlString) else {
-                throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath,
-                                                                        debugDescription: "Invalid URL string."))
-            }
-            
-            decoded = (url as! T)
-        } else if type == Decimal.self || type == NSDecimalNumber.self {
-            guard let decimal = try self.unbox(value, as: Decimal.self) else { return nil }
-            decoded = decimal as! T
-        } else {
-            self.storage.push(container: value)
-            defer { self.storage.popContainer() }
-            return try type.init(from: self)
-        }
-        
-        return decoded
-    }
-}
-

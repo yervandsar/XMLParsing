@@ -1,6 +1,6 @@
 //
 //  XMLDecodingStorage.swift
-//  XMLParsing
+//  XMLCoder
 //
 //  Created by Shawn Moore on 11/20/17.
 //  Copyright © 2017 Shawn Moore. All rights reserved.
@@ -10,36 +10,43 @@ import Foundation
 
 // MARK: - Decoding Storage
 
-internal struct _XMLDecodingStorage {
+struct XMLDecodingStorage {
     // MARK: Properties
 
     /// The container stack.
-    /// Elements may be any one of the XML types (String, [String : Any]).
-    private(set) internal var containers: [Any] = []
+    /// Elements may be any one of the XML types (StringBox, KeyedBox).
+    private var containers: [Box] = []
 
     // MARK: - Initialization
 
     /// Initializes `self` with no containers.
-    internal init() {}
+    init() {}
 
     // MARK: - Modifying the Stack
 
-    internal var count: Int {
-        return self.containers.count
+    var count: Int {
+        return containers.count
     }
 
-    internal var topContainer: Any {
-        precondition(!self.containers.isEmpty, "Empty container stack.")
-        return self.containers.last!
+    func topContainer() -> Box? {
+        return containers.last
     }
 
-    internal mutating func push(container: Any) {
-        self.containers.append(container)
+    mutating func push(container: Box) {
+        if let keyedBox = container as? KeyedBox {
+            containers.append(SharedBox(keyedBox))
+        } else if let unkeyedBox = container as? UnkeyedBox {
+            containers.append(SharedBox(unkeyedBox))
+        } else {
+            containers.append(container)
+        }
     }
 
-    internal mutating func popContainer() {
-        precondition(!self.containers.isEmpty, "Empty container stack.")
-        self.containers.removeLast()
+    @discardableResult
+    mutating func popContainer() -> Box? {
+        guard !containers.isEmpty else {
+            return nil
+        }
+        return containers.removeLast()
     }
 }
-
