@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author       = { "Shawn Moore" => "sm5@me.com" }
   s.ios.deployment_target = "10.0"
   s.osx.deployment_target = "10.12"
-  s.source       = { :git => "https://github.com/ShawnMoore/XMLParsing.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/yervandsar/XMLParsing.git", :tag => s.version.to_s }
   s.source_files = "Sources/XMLParsing/**/*.swift"
   s.requires_arc = true
 end
